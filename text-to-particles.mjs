@@ -148,3 +148,4 @@ window.addEventListener('load', function () {
     }
     animate();
 });
+export {};
