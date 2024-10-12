@@ -1,21 +1,22 @@
-window.addEventListener('load', function () {
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
+"use strict";
+window.addEventListener('load', () => {
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    var particles = [];
-    var mouse = { x: 9999, y: 9999 };
-    var gravity = 0.1;
-    var fraction = 0.99;
-    var Particle = /** @class */ (function () {
-        function Particle(x, y, color, velocity) {
+    let particles = [];
+    let mouse = { x: 9999, y: 9999 };
+    let gravity = 0.1;
+    let fraction = 0.99;
+    class Particle {
+        constructor(x, y, color, velocity) {
             this.x = x;
             this.y = y;
             this.color = color;
             this.velocity = velocity;
             this.alpha = 1;
         }
-        Particle.prototype.draw = function () {
+        draw() {
             context.save();
             context.beginPath();
             context.fillStyle = this.color;
@@ -24,8 +25,8 @@ window.addEventListener('load', function () {
             context.fill();
             context.closePath();
             context.restore();
-        };
-        Particle.prototype.update = function () {
+        }
+        update() {
             this.draw();
             this.velocity.x *= fraction;
             this.velocity.y *= fraction;
@@ -33,26 +34,25 @@ window.addEventListener('load', function () {
             this.x += this.velocity.x;
             this.y += this.velocity.y;
             this.alpha -= 0.005;
-        };
-        return Particle;
-    }());
-    window.addEventListener('click', function (e) {
-        mouse.x = e.x;
-        mouse.y = e.y;
-        var particleCount = 400;
-        var angle = (Math.PI * 2) / particleCount;
-        var power = 10;
-        for (var i = 0; i < particleCount; i++) {
-            particles.push(new Particle(mouse.x, mouse.y, "hsl(".concat(Math.random() * 360, ", 50%, 50%)"), {
+        }
+    }
+    window.addEventListener('click', (e) => {
+        mouse.x = e.offsetX;
+        mouse.y = e.offsetY;
+        let particleCount = 400;
+        let angle = (Math.PI * 2) / particleCount;
+        let power = 10;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle(mouse.x, mouse.y, `hsl(${Math.random() * 360}, 50%, 50%)`, {
                 x: Math.cos(angle * i) * Math.random() * power,
                 y: Math.sin(angle * i) * Math.random() * power,
             }));
         }
     });
     function animate() {
-        context.fillStyle = "rgba(0, 0, 0, 0.1)";
+        context.fillStyle = `rgba(255, 255, 255, 0.1)`;
         context.fillRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(function (particle, index) {
+        particles.forEach((particle, index) => {
             if (particle.alpha > 0) {
                 particle.update();
             }

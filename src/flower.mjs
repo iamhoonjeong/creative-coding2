@@ -1,15 +1,16 @@
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+"use strict";
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // canvas.style.backgroundColor = 'green';
-var number = 0;
-var scale = 10;
+let number = 0;
+let scale = 10;
 function drawFlower() {
-    var angle = number * 1;
-    var radius = scale * Math.sqrt(number);
-    var positionX = radius * Math.sin(angle) + canvas.width * 0.5;
-    var positionY = radius * Math.cos(angle) + canvas.height * 0.5;
+    let angle = number * 1;
+    let radius = scale * Math.sqrt(number);
+    let positionX = radius * Math.sin(angle) + canvas.width * 0.5;
+    let positionY = radius * Math.cos(angle) + canvas.height * 0.5;
     context.fillStyle = 'red';
     context.strokeStyle = 'blue';
     context.lineWidth = 5;

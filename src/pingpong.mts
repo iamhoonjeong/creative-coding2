@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
     vx: number;
     vy: number;
 
-    constructor(canvas, context, x, y) {
+    constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, x: number, y: number) {
       this.canvas = canvas;
       this.context = context;
       this.x = x;
@@ -51,7 +51,7 @@ window.addEventListener('load', () => {
       });
     }
 
-    update(x, y) {
+    update(x: number, y: number) {
       this.x = x;
       this.y = y;
       if (this.y < 0) this.y = 0;
@@ -82,7 +82,7 @@ window.addEventListener('load', () => {
     radius: number;
     speed: number;
 
-    constructor(canvas, context, x, y) {
+    constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, x: number, y: number) {
       this.canvas = canvas;
       this.context = context;
       this.radius = 20;

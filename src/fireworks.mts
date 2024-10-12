@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     velocity: { x: number; y: number };
     alpha: number;
 
-    constructor(x, y, color, velocity) {
+    constructor(x: number, y: number, color: string, velocity: { x: number; y: number }) {
       this.x = x;
       this.y = y;
       this.color = color;
@@ -68,7 +68,7 @@ window.addEventListener('load', () => {
   });
 
   function animate() {
-    context.fillStyle = `rgba(0, 0, 0, 0.1)`;
+    context.fillStyle = `rgba(255, 255, 255, 0.1)`;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach((particle, index) => {

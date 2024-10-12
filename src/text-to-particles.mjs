@@ -1,12 +1,13 @@
-window.addEventListener('load', function () {
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
+"use strict";
+window.addEventListener('load', () => {
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
     canvas.width = window.innerWidth * window.devicePixelRatio;
     canvas.height = window.innerHeight * window.devicePixelRatio;
-    canvas.style.width = "".concat(window.innerWidth, "px");
-    canvas.style.height = "".concat(window.innerHeight, "px");
-    var Particle = /** @class */ (function () {
-        function Particle(effect, x, y, color) {
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+    class Particle {
+        constructor(effect, x, y, color) {
             this.effect = effect;
             this.x = Math.random() * this.effect.canvasWidth;
             this.y = this.effect.canvasHeight;
@@ -24,11 +25,11 @@ window.addEventListener('load', function () {
             this.color = color;
             this.size = this.effect.gap;
         }
-        Particle.prototype.draw = function () {
+        draw() {
             this.effect.context.fillStyle = this.color;
             this.effect.context.fillRect(this.x, this.y, this.size, this.size);
-        };
-        Particle.prototype.update = function () {
+        }
+        update() {
             this.dx = this.effect.cursor.x - this.x;
             this.dy = this.effect.cursor.y - this.y;
             this.distance = this.dx * this.dx + this.dy * this.dy;
@@ -40,12 +41,10 @@ window.addEventListener('load', function () {
             }
             this.x += (this.vx *= this.frictions) + (this.ix - this.x) * this.ease;
             this.y += (this.vy *= this.frictions) + (this.iy - this.y) * this.ease;
-        };
-        return Particle;
-    }());
-    var Effect = /** @class */ (function () {
-        function Effect(context, canvasWidth, canvasHeight) {
-            var _this = this;
+        }
+    }
+    class Effect {
+        constructor(context, canvasWidth, canvasHeight) {
             this.context = context;
             this.canvasWidth = canvasWidth;
             this.canvasHeight = canvasHeight;
@@ -57,31 +56,30 @@ window.addEventListener('load', function () {
             this.particles = [];
             this.gap = 1;
             this.cursor = {
-                radius: 200000,
+                radius: 20000,
                 x: 9999,
                 y: 9999,
             };
-            window.addEventListener('mousemove', function (e) {
-                _this.cursor.x = (e.offsetX / canvas.offsetWidth) * canvas.width;
-                _this.cursor.y = (e.offsetY / canvas.offsetHeight) * canvas.height;
+            window.addEventListener('mousemove', (e) => {
+                this.cursor.x = (e.offsetX / canvas.offsetWidth) * canvas.width;
+                this.cursor.y = (e.offsetY / canvas.offsetHeight) * canvas.height;
             });
         }
-        Effect.prototype.wrapText = function (text) {
-            var _this = this;
-            var gradient = this.context.createLinearGradient(0, 0, this.canvasWidth, this.canvasHeight);
+        wrapText(text) {
+            const gradient = this.context.createLinearGradient(0, 0, this.canvasWidth, this.canvasHeight);
             gradient.addColorStop(0.3, 'orange');
             gradient.addColorStop(0.5, 'white');
             gradient.addColorStop(0.7, 'pink');
             this.context.fillStyle = gradient;
-            this.context.font = "".concat(this.fontSize, "px Montserrat");
+            this.context.font = `${this.fontSize}px Montserrat`;
             this.context.textAlign = 'center';
             this.context.textBaseline = 'middle';
-            var linesArray = [];
-            var lineCounter = 0;
-            var line = '';
-            var words = text.split(' ');
-            for (var i = 0; i < words.length; i++) {
-                var testLine = line + words[i] + ' ';
+            let linesArray = [];
+            let lineCounter = 0;
+            let line = '';
+            let words = text.split(' ');
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i] + ' ';
                 if (this.context.measureText(testLine).width > this.maxTextWidth) {
                     line = words[i] + ' ';
                     lineCounter++;
@@ -91,53 +89,52 @@ window.addEventListener('load', function () {
                 }
                 linesArray[lineCounter] = line;
             }
-            var textHeight = this.lineHeight * lineCounter;
+            let textHeight = this.lineHeight * lineCounter;
             this.textY = this.canvasHeight * 0.5 - textHeight * 0.5;
-            linesArray.forEach(function (el, index) {
-                _this.context.fillText(el, _this.textX, _this.textY + index * _this.lineHeight);
+            linesArray.forEach((el, index) => {
+                this.context.fillText(el, this.textX, this.textY + index * this.lineHeight);
             });
             this.convertToParticle();
-        };
-        Effect.prototype.convertToParticle = function () {
+        }
+        convertToParticle() {
             this.particles = [];
-            var pixels = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight).data;
+            const pixels = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight).data;
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            for (var y = 0; y < this.canvasHeight; y += this.gap) {
-                for (var x = 0; x < this.canvasWidth; x += this.gap) {
-                    var index = (y * this.canvasWidth + x) * 4;
-                    var alpha = pixels[index + 3];
+            for (let y = 0; y < this.canvasHeight; y += this.gap) {
+                for (let x = 0; x < this.canvasWidth; x += this.gap) {
+                    const index = (y * this.canvasWidth + x) * 4;
+                    const alpha = pixels[index + 3];
                     if (alpha > 0) {
-                        var r = pixels[index];
-                        var g = pixels[index + 1];
-                        var b = pixels[index + 2];
-                        var color = "rgb(".concat(r, ", ").concat(g, ", ").concat(b, ")");
+                        const r = pixels[index];
+                        const g = pixels[index + 1];
+                        const b = pixels[index + 2];
+                        const color = `rgb(${r}, ${g}, ${b})`;
                         this.particles.push(new Particle(this, x, y, color));
                     }
                 }
             }
-        };
-        Effect.prototype.render = function () {
-            this.particles.forEach(function (particle) {
+        }
+        render() {
+            this.particles.forEach((particle) => {
                 particle.update();
                 particle.draw();
             });
-        };
-        Effect.prototype.resize = function (width, height) {
+        }
+        resize(width, height) {
             this.canvasWidth = width;
             this.canvasHeight = height;
             this.textX = this.canvasWidth * 0.5;
             this.textY = this.canvasHeight * 0.5;
             this.maxTextWidth = this.canvasWidth * 0.8;
-        };
-        return Effect;
-    }());
-    var effect = new Effect(context, canvas.width, canvas.height);
+        }
+    }
+    const effect = new Effect(context, canvas.width, canvas.height);
     effect.wrapText('HERE IS THE THING, PARTICLES');
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', () => {
         canvas.width = window.innerWidth * window.devicePixelRatio;
         canvas.height = window.innerHeight * window.devicePixelRatio;
-        canvas.style.width = "".concat(window.innerWidth, "px");
-        canvas.style.height = "".concat(window.innerHeight, "px");
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
         effect.wrapText('HERE IS THE THING, PARTICLES');
         effect.resize(canvas.width, canvas.height);
     });

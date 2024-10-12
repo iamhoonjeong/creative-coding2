@@ -97,7 +97,7 @@ window.addEventListener('load', () => {
 
       this.gap = 1;
       this.cursor = {
-        radius: 200000,
+        radius: 20000,
         x: 9999,
         y: 9999,
       };
@@ -108,7 +108,7 @@ window.addEventListener('load', () => {
       });
     }
 
-    wrapText(text) {
+    wrapText(text: string) {
       const gradient = this.context.createLinearGradient(0, 0, this.canvasWidth, this.canvasHeight);
       gradient.addColorStop(0.3, 'orange');
       gradient.addColorStop(0.5, 'white');
@@ -175,7 +175,7 @@ window.addEventListener('load', () => {
       });
     }
 
-    resize(width, height) {
+    resize(width: number, height: number) {
       this.canvasWidth = width;
       this.canvasHeight = height;
       this.textX = this.canvasWidth * 0.5;
